@@ -14,7 +14,7 @@ class Prover{
         this.g2 = new mcl.G1();
         this.g2.setStr('1 2144250947445192081071618466765046647019257686245947349033844530891338159027816696711238671324221321317530545114427 2665798332422762660334686159210698639947668680862640755137811598895238932478193747736307724249253853210778728799013');
         
-        this.publicKey = mcl.add(mcl.mul(this.g1,this,sk1),mcl.mul(this.g2,this.sk2)); //działamy na eliptic curves, więc tutaj nie podnosimy do potęgi tylko mnożymy. I mamy nowy punkt.
+        this.publicKey = mcl.add(mcl.mul(this.g1,this.sk1),mcl.mul(this.g2,this.sk2)); //działamy na eliptic curves, więc tutaj nie podnosimy do potęgi tylko mnożymy. I mamy nowy punkt.
     }
 
     createCommitment(){
@@ -35,7 +35,7 @@ class Prover{
         s1 = mcl.add(this.x1, mcl.mul(this.sk1,c));
         
         let s2 = new mcl.Fr();
-        s2 = mcl.add(this.x2, mcl.mul(this.sk2.c));
+        s2 = mcl.add(this.x2, mcl.mul(this.sk2,c));
         
         return s1,s2;
     }
@@ -43,3 +43,23 @@ class Prover{
 }
 
 module.exports = Prover;
+
+
+
+/* this is hash
+const crypto = require("crypto");
+ 
+function hash(value)
+{
+    const r = '0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001';
+    const hash = crypto.createHash('SHA3-512')
+    hash.update(value);
+    mHash = hash.digest('hex')
+ 
+    const rInt = BigInt(r);
+    const hashInt = BigInt('0x'+mHash);
+    return (hashInt % rInt).toString();
+}
+ 
+module.exports.hash = hash;
+*/

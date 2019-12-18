@@ -19,7 +19,8 @@ function decode(x){
 app.get('/protocols/', (req, res) => {
     res.json({schemas: ['ois']});
 });
-var port = 8080;
+// var port = 8080;
+var port = 8443;
 
 app.post('/protocols/ois/init', (req, res) => {
     let X = new mcl.G1(); /*What to do here?*/

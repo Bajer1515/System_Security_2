@@ -46,8 +46,10 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                s1: s1.getStr(),
+                s1: s1.getStr(), //Here is problem with getStr()
                 s2: s2.getStr()
+                // s1: getStr(s1),
+                // s2: getStr(s2)
             },
             protocol_name: 'ois'
         }, 
