@@ -4,7 +4,7 @@ const mcl = require('mcl-wasm');
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Prover = require('./ProverOIS.js');
+const Prover = require('./ProverSSS.js');
 const rp = require('request-promise');
 
 let prover = new Prover();
@@ -13,7 +13,7 @@ let prover = new Prover();
 // let hostname = 'http://127.0.0.1';
 let hostname = 'http://10.8.0.12'; //:8080'
 let port = '8080'; //'8443';
-let base_path = 'protocols/ois';
+let base_path = 'protocols/sss';
 
 let X = prover.createCommitment();
 let A = prover.publicKey;
@@ -30,7 +30,7 @@ let options = {
             A: encode(A),
             X: encode(X)
         },
-        protocol_name: 'ois'
+        protocol_name: 'sss'
     }, 
     json: true
 }
@@ -48,12 +48,10 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                s1: s1.getStr(), //Here is problem with getStr()
+                s1: s1.getStr(),
                 s2: s2.getStr()
-                // s1: getStr(s1),
-                // s2: getStr(s2)
             },
-            protocol_name: 'ois'
+            protocol_name: 'sss'
         }, 
         json: true
     }

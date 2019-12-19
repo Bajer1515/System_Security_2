@@ -37,7 +37,7 @@ class Prover{
         let s2 = new mcl.Fr();
         s2 = mcl.add(this.x2, mcl.mul(this.sk2,c));
         
-        return s1,s2;
+        return [s1, s2];
     }
 
 }

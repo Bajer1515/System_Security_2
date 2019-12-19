@@ -4,7 +4,7 @@ const crypto = require('crypto');
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Verifier = require('./VerifierOIS.js');
+const Verifier = require('./VerifierSSS.js');
 let verifier = new Verifier();
 
 var express = require('express');
@@ -17,28 +17,33 @@ function decode(x){
 
 
 app.get('/protocols/', (req, res) => {
-    res.json({schemas: ['ois']});
+    res.json({schemas: ['sss']});
 });
 var port = 8080;
 // var port = 8443;
 
-app.post('/protocols/ois/init', (req, res) => {
-    let X = new mcl.G1(); /*What to do here?*/
+app.post('/protocols/sss/init', (req, res) => {
+    let X = new mcl.G1();
     let A = new mcl.G1();
+    let s = new mcl.Fr();
+    let c = new mcl.Fr();
     let sessionToken = crypto.randomBytes(16).toString('base64');
     X.setStr(decode(req.body.payload.X)); 
     A.setStr(decode(req.body.payload.A));
-    verifier.consumeAX(A,X);
+    s.setStr(decode(req.body.payload.s));
+    c.setStr(decode(req.body.payload.c));
+
+    verifier.consumeAXsc(A,X,s,c);
     let c = verifier.createChallenge();
     let resp_body = {
-        protocol_name: 'ois',
+        protocol_name: 'sss',
         payload: {c: c.getStr()},
         session_token: sessionToken 
     }
     res.json(resp_body);
 })
 
-app.post('/protocols/ois/verify', (req, res) =>{
+app.post('/protocols/sss/verify', (req, res) =>{
     console.log(req.body);
     let s1 = new mcl.Fr();
     let s2 = new mcl.Fr();
