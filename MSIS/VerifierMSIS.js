@@ -20,14 +20,14 @@ class Verifier{
         return this.c;
     }
 
-    //How to verify this???
-    verify(s){
-        this.g2 = new mcl.G1();
-        this.g2 = Hash(X|c);
+    verify(S){
+        this.g2 = mcl.hashAndMapToG2(X.setStr(16)+c.setStr(16));
 
         let A_c = mcl.mul(this.A,this.c);
-        let left = mcl.mul(this.g,s);
-        let right = mcl.add(this.X,A_c);
+        // let left = mcl.mul(this.g2,s);
+        let XAc = mcl.add(this.X,A_c);
+        e1 = mcl.pairing(S,this.g);
+        e2 = mcl.pairing(g2,XAc);
         return left.isEqual(right);
     }
 }

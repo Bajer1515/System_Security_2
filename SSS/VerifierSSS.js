@@ -1,5 +1,5 @@
 const mcl = require('mcl-wasm');
-const Hash = require('./hash.js');
+// const Hash = require('./hash.js');
 
 class Verifier{
     constructor(){
@@ -15,9 +15,9 @@ class Verifier{
         this.X = X;
     }
 
-    createC(m,X){
-        this.c = Hash(this.m||this.X);
-    }
+    // createC(m,X){
+    //     this.c = mcl.hashAndMapToG1(X|msg);
+    // }
 
     verify(s,X,c){
         let A_c = mcl.mul(this.A,this.c);

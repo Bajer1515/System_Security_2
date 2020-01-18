@@ -18,13 +18,13 @@ let hostname = 'http://10.8.0.12'; //:8080'
 let port = '8080'; //'8443';
 let base_path = 'protocols/sss';
 
-
 // Create X and A
 let X = prover.createCommitment();
 let A = prover.publicKey;
-let C = prover.createC();
-let s = prover.genProof();
-let M = prover.m;
+let msg = 'Test message';
+let c = mcl.hashAndMapToG1( X.serializeToHexStr() + msg.serializeToHexStr() );
+let s = prover.genProof(c);
+
 
 function encode(x){
     return x.getStr().slice(2);
@@ -39,7 +39,7 @@ let options = {
             s: s.setStr(),
             A: encode(A),
             X: encode(X),
-            m: M.setStr()
+            msg: msg.setStr()
         },
         protocol_name: 'sss'
     }, 

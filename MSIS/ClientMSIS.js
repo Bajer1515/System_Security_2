@@ -8,8 +8,8 @@ const rp = require('request-promise');
 
 let prover = new Prover();
 
-let hostname = 'https://knowak.thenflash.com';
-// let hostname = 'http://127.0.0.1';
+// let hostname = 'https://knowak.thenflash.com';
+let hostname = 'http://127.0.0.1';
 let port = '8443';
 let base_path = 'protocols/msis';
 
@@ -37,7 +37,7 @@ rp(options).then(res => {
     let c = new mcl.Fr();
     c.setStr(res.payload.c)
     
-    let s = prover.genProof(c);
+    let S = prover.genProof(c);
     
     let path = base_path+'/verify';
     let options = {
@@ -46,7 +46,7 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                s: s.getStr()
+                S: S.getStr()
             },
             protocol_name: 'msis'
         }, 

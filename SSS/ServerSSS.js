@@ -47,16 +47,14 @@ app.post('/protocols/sss/verify', (req, res) =>{
     console.log(req.body);
     let s = new mcl.Fr();
     let X = new mcl.Fr();
-    // let A = new mcl.Fr();
-
-    // let s2 = new mcl.Fr();
+  
     s.setStr(req.body.payload.s);
     X.setStr(req.body.payload.X);
-    var A.setStr(req.body.payload.A);
-    var m.setStr(req.body.payload.m);
-    // s2.setStr(req.body.payload.s2);
+    A.setStr(req.body.payload.A);
+    msg.setStr(req.body.payload.msg);
+   
 
-    let c = verifier.createC(m,X);
+    let c = mcl.hashAndMapToG1(X|msg);
     let result = verifier.verify(s,X,c);
     console.log("Verified:", result)
     if(result){
