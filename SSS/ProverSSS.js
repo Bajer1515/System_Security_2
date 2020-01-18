@@ -27,7 +27,6 @@ class Prover{
     createC(m,X){
         
         let c = Hash.hash(M||X);
-        
         return c;
     }
     

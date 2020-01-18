@@ -15,7 +15,6 @@ function decode(x){
     return '1 ' + x;
 }
 
-
 app.get('/protocols/', (req, res) => {
     res.json({schemas: ['sis']});
 });
