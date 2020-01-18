@@ -27,7 +27,7 @@ app.post('/protocols/blsss/verify', (req, res) =>{
     let A = new mcl.Fr();
 
     let sigma.setStr(req.body.payload.sigma);
-    let A.setStr(req.body.payload.A);
+    let A.setStr(decode(req.body.payload.A));
     let msg.setStr(req.body.payload.msg);
 
     let h = verifier.createHash(msg);
