@@ -20,7 +20,11 @@ class Verifier{
         return this.c;
     }
 
+    //How to verify this???
     verify(s){
+        this.g2 = new mcl.G1();
+        this.g2 = Hash(X|c);
+
         let A_c = mcl.mul(this.A,this.c);
         let left = mcl.mul(this.g,s);
         let right = mcl.add(this.X,A_c);

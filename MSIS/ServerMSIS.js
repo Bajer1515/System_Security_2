@@ -4,7 +4,7 @@ const crypto = require('crypto');
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Verifier = require('./VerifierSIS.js');
+const Verifier = require('./VerifierMSIS.js');
 let verifier = new Verifier();
 
 var express = require('express');
@@ -17,11 +17,11 @@ function decode(x){
 
 
 app.get('/protocols/', (req, res) => {
-    res.json({schemas: ['sis']});
+    res.json({schemas: ['msis']});
 });
 var port = 8080;
 
-app.post('/protocols/sis/init', (req, res) => {
+app.post('/protocols/msis/init', (req, res) => {
     let X = new mcl.G1();
     let A = new mcl.G1();
     let sessionToken = crypto.randomBytes(16).toString('base64');
@@ -30,14 +30,14 @@ app.post('/protocols/sis/init', (req, res) => {
     verifier.consumeAX(A,X);
     let c = verifier.createChallenge();
     let resp_body = {
-        protocol_name: 'sis',
+        protocol_name: 'msis',
         payload: {c: c.getStr()},
         session_token: sessionToken 
     }
     res.json(resp_body);
 })
 
-app.post('/protocols/sis/verify', (req, res) =>{
+app.post('/protocols/msis/verify', (req, res) =>{
     console.log(req.body);
     let s = new mcl.Fr();
     s.setStr(req.body.payload.s);

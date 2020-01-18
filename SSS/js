@@ -1,3 +1,0 @@
-TypeError: Hash is not a function
-    at Prover.createC (/home/adambajerowicz/Studies/Sem_II/Sys_SecII/Schemes/System_Security_2/SSS/ProverSSS.js:29:17)
-    at mcl.init.then (/home/adambajerowicz/Studies/Sem_II/Sys_SecII/Schemes/System_Security_2/SSS/ClientSSS.js:25:16)

@@ -3,7 +3,7 @@ const mcl = require('mcl-wasm');
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Prover = require('./ProverSIS.js');
+const Prover = require('./ProverMSIS.js');
 const rp = require('request-promise');
 
 let prover = new Prover();
@@ -11,7 +11,7 @@ let prover = new Prover();
 let hostname = 'https://knowak.thenflash.com';
 // let hostname = 'http://127.0.0.1';
 let port = '8443';
-let base_path = 'protocols/sis';
+let base_path = 'protocols/msis';
 
 let X = prover.createCommitment();
 let A = prover.publicKey;
@@ -28,7 +28,7 @@ let options = {
             A: encode(A),
             X: encode(X)
         },
-        protocol_name: 'sis'
+        protocol_name: 'msis'
     }, 
     json: true
 }
@@ -48,7 +48,7 @@ rp(options).then(res => {
             payload: {
                 s: s.getStr()
             },
-            protocol_name: 'sis'
+            protocol_name: 'msis'
         }, 
         json: true
     }
