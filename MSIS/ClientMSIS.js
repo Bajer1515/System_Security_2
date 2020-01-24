@@ -46,7 +46,7 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                S: S.getStr()
+                S: S
             },
             protocol_name: 'msis'
         }, 

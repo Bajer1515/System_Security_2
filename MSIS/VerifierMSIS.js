@@ -21,14 +21,18 @@ class Verifier{
     }
 
     verify(S){
-        this.g2 = mcl.hashAndMapToG2(X.setStr(16)+c.setStr(16));
+        // this.g2 = new mcl.G2();
+        this.g2 = mcl.hashAndMapToG2(this.X.getStr(16)+this.c.getStr(16));
 
         let A_c = mcl.mul(this.A,this.c);
         // let left = mcl.mul(this.g2,s);
         let XAc = mcl.add(this.X,A_c);
-        e1 = mcl.pairing(S,this.g);
-        e2 = mcl.pairing(g2,XAc);
-        return left.isEqual(right);
+        e1 = mcl.pairing(this.S,this.g);
+        e2 = mcl.pairing(this.g2,XAc);
+        // return e1.isEqual(e2);
+        let L = e1.getStr();
+        let P = e2.getStr();
+        return L.isEqual(P);
     }
 }
 

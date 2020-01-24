@@ -40,7 +40,7 @@ app.post('/protocols/msis/init', (req, res) => {
 
 app.post('/protocols/msis/verify', (req, res) =>{
     console.log(req.body);
-    let s = new mcl.Fr();
+    let S = new mcl.Fr();
     S.setStr(req.body.payload.S);
     let result = verifier.verify(S);
     console.log("Verified:", result)

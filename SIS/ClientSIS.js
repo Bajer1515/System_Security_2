@@ -7,8 +7,8 @@ const Prover = require('./ProverSIS.js');
 const rp = require('request-promise');
 
 let prover = new Prover();
-
-let hostname = 'https://knowak.thenflash.com';
+// let hostname = 'http://jzawojski.thenflash.com'
+let hostname = 'http://10.8.0.10'; //Jędrula
 // let hostname = 'http://127.0.0.1';
 let port = '8443';
 let base_path = 'protocols/sis';

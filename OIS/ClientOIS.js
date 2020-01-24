@@ -9,10 +9,11 @@ const rp = require('request-promise');
 
 let prover = new Prover();
 
-let hostname = 'https://knowak.thenflash.com';
+// let hostname = 'https://knowak.thenflash.com';
+let hostname = 'http://10.8.0.10';
 // let hostname = 'http://127.0.0.1';
 // let hostname = 'http://10.8.0.12'; //:8080'
-let port = '8443'; //'8443';
+let port = '8080'; //'8443';
 let base_path = 'protocols/ois';
 
 let X = prover.createCommitment();
