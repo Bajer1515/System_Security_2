@@ -10,7 +10,7 @@ let prover = new Prover();
 // let hostname = 'http://jzawojski.thenflash.com'
 let hostname = 'http://10.8.0.10'; //Jędrula
 // let hostname = 'http://127.0.0.1';
-let port = '8443';
+let port = '8080';
 let base_path = 'protocols/sis';
 
 let X = prover.createCommitment();

@@ -20,9 +20,9 @@ let base_path = 'protocols/sss';
 
 // Create X and A
 let X = prover.createCommitment();
-let A = prover.publicKey;
-let msg = 'Test message';
-let c = mcl.hashAndMapToG1( X.serializeToHexStr() + msg.serializeToHexStr() );
+let A = prover.getPk();
+let msg = '';
+let c = mcl.hashAndMapToG1( X.getStr() + msg.serializeToHexStr() );
 let s = prover.genProof(c);
 
 
