@@ -20,13 +20,14 @@ class Prover{
     }
 
     genProof(C){
-        // this.g2 = new mcl.G2();
         this.c = new mcl.Fr();
-        this.c.getStr(C);
-        this.g2 = mcl.hashAndMapToG2(this.X.getStr(16).slice(2) + this.c.getStr(16));
+        this.c = C;
+        this.s = mcl.add(this.x, mcl.mul(this.secretKey, this.c));
+
+        this.g2 = mcl.hashAndMapToG2(this.X.getStr(10) + this.c.getStr(10).slice(2));
         
-        this.S = mcl.mul(this.g2, mcl.add(this.x, mcl.mul(this.secretKey,this.c)));
-        return this.S.getStr(10);
+        this.S = mcl.mul(this.g2,this.s);
+        return this.S.getStr();
     }
 
 }

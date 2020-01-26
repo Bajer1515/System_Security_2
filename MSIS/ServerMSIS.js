@@ -32,7 +32,7 @@ app.post('/protocols/msis/init', (req, res) => {
     let c = verifier.createChallenge();
     let resp_body = {
         protocol_name: 'msis',
-        payload: {c: c.getStr()},
+        payload: {c: c.getStr(10)},
         session_token: sessionToken 
     }
     res.json(resp_body);
