@@ -23,15 +23,19 @@ var port = 8080;
 
 app.post('/protocols/blsss/verify', (req, res) =>{
     console.log(req.body);
-    let sigma = new mcl.Fr();
-    let A = new mcl.Fr();
+    // let sigma = new mcl.Fr();
+    // let A = new mcl.Fr();
+    this.A = new mcl.G1();
+    this.A.setStr(decode(req.body.payload.A));
+    
+    this.sigma = new mcl.G2();
+    this.sigma.setStr(decode(req.body.payload.sigma));
+    
+    
+    // msg.setStr(req.body.payload.msg);
 
-    sigma.setStr(req.body.payload.sigma);
-    A.setStr(decode(req.body.payload.A));
-    msg.setStr(req.body.payload.msg);
+    let result = verifier.verify(this.sigma,this.A,req.body.payload.msg);
 
-    let h = verifier.createHash(msg);
-    let result = verifier.verify(s,X,c);
     console.log("Verified:", result)
     if(result){
         res.statusCode = 200;
