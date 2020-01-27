@@ -9,8 +9,8 @@ const rp = require('request-promise');
 let signer = new Signer();
 
 // Path initialization
-// let hostname = 'http://127.0.0.1';
-let hostname = 'http://10.8.0.10'; //:8080'
+let hostname = 'http://127.0.0.1';
+// let hostname = 'http://10.8.0.10'; //:8080'
 let port = '8080'; //'8443';
 let base_path = 'protocols/gjss';
 

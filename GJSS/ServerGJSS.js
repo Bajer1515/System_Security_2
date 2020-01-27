@@ -11,9 +11,9 @@ var express = require('express');
 var app = express(); // instance of class express
 app.use(express.json()); // Żeby można było używać json'a
 
-// function decode(x){
-//     return '1 ' + x;
-// }
+function decode(x){
+    return '1 ' + x;
+}
 
 
 app.get('/protocols/', (req, res) => {
@@ -22,17 +22,13 @@ app.get('/protocols/', (req, res) => {
 var port = 8080;
 // var port = 8443;
 
-app.post('/protocols/sss/verify', (req, res) =>{
+app.post('/protocols/gjss/verify', (req, res) =>{
     console.log(req.body);
-    let s = new mcl.Fr();
-    let X = new mcl.G1();
+
     let A = new mcl.G1();
-  
-    s.setStr(req.body.payload.s);
-    X.setStr(decode(req.body.payload.X));
     A.setStr(decode(req.body.payload.A));
    
-    let result = verifier.verify(req.body.payload.msg,s,X,A);
+    let result = verifier.verify(req.body.payload.msg,A,req.body.payload.sigma);
     console.log("Verified:", result)
     if(result){
         res.statusCode = 200;

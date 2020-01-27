@@ -9,6 +9,7 @@ class Signer{
         this.a = new mcl.Fr(); //Fr = Zq czyli nasza grupa wykładników
         this.a.setByCSPRNG(); //pseudo random generator losujemy jakiś klucz jeden
         
+        this.A = new mcl.G1();
         this.A = mcl.mul(this.G1,this.a);
     }
 
@@ -20,10 +21,12 @@ class Signer{
     }
 
    gen_h(msg){
+       this.h = new mcl.G1();
        this.h = mcl.hashAndMapToG1(msg+this.r);
        return this.h.getStr(10);
    }   
     gen_z(){   
+       this.z = new mcl.G1(); 
        this.z = mcl.mul(this.h,this.a);
        return this.z.getStr(10);
    }
@@ -32,11 +35,13 @@ class Signer{
        this.k = new mcl.Fr();
        this.k.setByCSPRNG;
 
+       this.u = new mcl.G1();
        this.u = mcl.mul(this.G1,this.k);
        return this.u.getStr(10);
    }
 
    gen_v(){
+       this.v = new mcl.G1();
        this.v = mcl.mul(this.h, this.k);
        return this.v.getStr(10);
    }
@@ -63,11 +68,13 @@ class Signer{
     }
 
     gen_AC(){
+        this.ac = new mcl.Fr();
         this.ac = mcl.mul(this.a, this.c);
         return this.ac;
     }
 
     gen_s(){
+        this.s = new mcl.Fr();
         this.s = mcl.add(this.k, this.ac);
         return this.s;
     }
