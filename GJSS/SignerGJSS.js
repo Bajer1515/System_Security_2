@@ -19,10 +19,13 @@ class Signer{
        return this.r;
     }
 
-   gen_z(msg){
+   gen_h(msg){
        this.h = mcl.hashAndMapToG1(msg+this.r);
+       return this.h.getStr(10);
+   }   
+    gen_z(){   
        this.z = mcl.mul(this.h,this.a);
-       return this.z;
+       return this.z.getStr(10);
    }
 
    gen_u(){
@@ -30,26 +33,26 @@ class Signer{
        this.k.setByCSPRNG;
 
        this.u = mcl.mul(this.G1,this.k);
-       return this.u;
+       return this.u.getStr(10);
    }
 
    gen_v(){
        this.v = mcl.mul(this.h, this.k);
-       return this.v;
+       return this.v.getStr(10);
    }
 
-   gen_sigma(){
-        this.sigma = [this.G1.getStr(10).slice(2),
+   gen_input(){
+        this.input = [this.G1.getStr(10).slice(2),
                       this.h.getStr(10),
                       this.A.getStr(10).slice(2),
                       this.z.getStr(10),
                       this.u.getStr(10),
                       this.v.getStr(10)].join('');
-        return this.sigma;
+        return this.input;
    }
 
    gen_H(){
-       this.H = parseInt(sha3_512(this.sigma),10);
+       this.H = parseInt(sha3_512(this.input),10);
        return this.H;
     }
 
@@ -65,7 +68,7 @@ class Signer{
     }
 
     gen_s(){
-        this.s = mcl.add(this.k, this.c);
+        this.s = mcl.add(this.k, this.ac);
         return this.s;
     }
 

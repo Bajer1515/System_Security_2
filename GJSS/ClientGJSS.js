@@ -16,20 +16,22 @@ let base_path = 'protocols/gjss';
 
 A = signer.A;
 r = signer.gen_r();
+h = signer.gen_h();
 z = signer.gen_z(); 
 u = signer.gen_u();
 v = signer.gen_v();
-sigma = signer.gen_sigma();
+sigma = signer.gen_input();
 H = signer.gen_H();
 c = signer.gen_c();
 ac = signer.gen_AC();
 s = signer.gen_s();
 
+
 let msg = 'Witaj Jedrzeju';
 
-// function encode(x){
-//     return x.getStr().slice(2);
-// }
+function encode(x){
+    return x.getStr().slice(2);
+}
 
 let path = base_path+'/verify';
 let options = {
@@ -37,8 +39,13 @@ let options = {
     uri: `${hostname}:${port}/${path}`,
     body: {
         payload: {
-            sigma: sigma,
-            A: A,
+            sigma: {
+                s: s,
+                c: c,
+                r: r,
+                z: z
+            },
+            A: encode(A),
             msg: msg
         },
         protocol_name: 'gjss'
