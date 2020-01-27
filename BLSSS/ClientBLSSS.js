@@ -11,13 +11,13 @@ let signer = new Signer();
 // Path initialization
 // let hostname = 'http://rpacut.thenflash.com';
 let hostname = 'http://127.0.0.1';
-// let hostname = 'http://10.8.0.12'; //:8080'
+// let hostname = 'http://10.8.0.10'; //:8080'
 let port = '8080'; //'8443';
 let base_path = 'protocols/blsss';
 
 
 // x and msg
-x = signer.genx();
+x = signer.a;
 let msg = 'Test msg';
 
 A = signer.A;

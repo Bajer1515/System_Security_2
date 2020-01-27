@@ -11,27 +11,27 @@ class Signer{
         this.A = mcl.mul(this.G1,this.a);
     }
 
-    genx(){
-        this.x = new mcl.Fr();
-        this.x.setByCSPRNG();
-        return this.x;
-    }
+    // genx(){
+    //     this.x = new mcl.Fr();
+    //     this.x.setByCSPRNG();
+    //     return this.x;
+    // }
 
-    genX(){
-        this.X = new mcl.G1(); 
-        this.X = mcl.mul(this.G1,this.x);
-        return this.X;
-    }
+    // genX(){
+    //     this.X = new mcl.G1(); 
+    //     this.X = mcl.mul(this.G1,this.x);
+    //     return this.X;
+    // }
 
     genh(msg){
-        this.h = new mcl.G2();
+        // this.h = new mcl.G2();
         this.h = mcl.hashAndMapToG2(msg);
         return this.h;
     }
 
     genSigma(){
         this.sigma = new mcl.G2();
-        this.sigma = mcl.mul(this.h, this.x);
+        this.sigma = mcl.mul(this.h, this.a);
         return this.sigma;
     }
 }

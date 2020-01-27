@@ -13,10 +13,10 @@ class Verifier{
         this.h = new mcl.G2();
         this.h = mcl.hashAndMapToG2(msg);
         //e1 is not defined
-        e1 = mcl.pairing(this.G1, sigma);
-        e2 = mcl.pairing(A, this.h)
+        this.e1 = mcl.pairing(this.G1, sigma);
+        this.e2 = mcl.pairing(A, this.h)
         
-        return e1.isEqual(e2);
+        return this.e1.isEqual(this.e2);
     }
 }
 
