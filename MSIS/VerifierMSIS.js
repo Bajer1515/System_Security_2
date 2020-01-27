@@ -10,10 +10,10 @@ class Verifier{
     }
 
     consumeAX(A,X){
-        this.A = new mcl.G1();
+        // A = new mcl.G1();
         this.A = A;
 
-        this.X = new mcl.G1();
+        // this.X = new mcl.G1();
         this.X = X;
     }
     createChallenge(){
@@ -24,7 +24,7 @@ class Verifier{
     }
 
     verify(s){
-        this.S = new mcl.G2();
+        // this.S = new mcl.G2();
         this.S = s;
         this.g2 = mcl.hashAndMapToG2(this.X.getStr(10).slice(2)+this.c.getStr(10).slice(2));
 
@@ -32,12 +32,15 @@ class Verifier{
         // let left = mcl.mul(this.g2,s);
         let XAc = mcl.add(this.X,A_c);
 
-        this.e1 = mcl.pairing(this.S, this.g1);
-        this.e2 = mcl.pairing(this.g2,XAc);
+        this.e1 = mcl.pairing(this.g1, this.S);
+        this.e2 = mcl.pairing(XAc,this.g2);
         // return e1.isEqual(e2);
-        let L = this.e1.getStr(10);
-        let P = this.e2.getStr(10);
-        return L.isEqual(P);
+        let left = this.e1.getStr(10);
+        let right = this.e2.getStr(10);
+        console.log(left);
+        console.log(right);
+
+        return left === right;
     }
 }
 

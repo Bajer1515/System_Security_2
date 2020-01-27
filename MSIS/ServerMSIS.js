@@ -20,7 +20,7 @@ app.get('/protocols/', (req, res) => {
     res.json({schemas: ['msis']});
 });
 // var port = 8080;
-var port = 8443;
+var port = 8080;
 
 app.post('/protocols/msis/init', (req, res) => {
     let X = new mcl.G1();
@@ -40,8 +40,8 @@ app.post('/protocols/msis/init', (req, res) => {
 
 app.post('/protocols/msis/verify', (req, res) =>{
     console.log(req.body);
-    let S = new mcl.Fr();
-    S.setStr(req.body.payload.S);
+    let S = new mcl.G2();
+    S.setStr(decode(req.body.payload.S));
     let result = verifier.verify(S);
     console.log("Verified:", result)
     if(result){

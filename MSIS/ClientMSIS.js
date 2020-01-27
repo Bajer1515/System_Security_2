@@ -8,9 +8,10 @@ const rp = require('request-promise');
 
 let prover = new Prover();
 
-// let hostname = 'https://knowak.thenflash.com';
-let hostname = 'http://127.0.0.1';
-let port = '8443';
+// let hostname = '10.8.0.8';
+// let hostname = 'http://127.0.0.1';
+let hostname = 'http://10.8.0.10';
+let port = '8080';
 let base_path = 'protocols/msis';
 
 let X = prover.createCommitment();
@@ -46,7 +47,7 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                S: S
+                S: encode(S)
             },
             protocol_name: 'msis'
         }, 
