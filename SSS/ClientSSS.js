@@ -1,10 +1,7 @@
 /*sudo openvpn --config abajerowicz.ovpn*/
 const mcl = require('mcl-wasm');
 
-mcl.init(mcl.BLS12_381).then( ()=>
-{
-
-// Import libraries    
+mcl.init(mcl.BLS12_381).then( ()=>{
 
 const Signer = require('./SignerSSS.js');
 const rp = require('request-promise');
@@ -13,17 +10,21 @@ let signer = new Signer();
 
 // Path initialization
 // let hostname = 'http://rpacut.thenflash.com';
-let hostname = 'http://127.0.0.1';
-// let hostname = 'http://10.8.0.12'; //:8080'
+// let hostname = 'http://127.0.0.1';
+let hostname = 'http://10.8.0.10'; //:8080'
 let port = '8080'; //'8443';
 let base_path = 'protocols/sss';
 
-// Create X and A
-let X = signer.createCommitment();
-let A = signer.publicKey;
-let msg = 'Test Message';
-let c = signer.genC(msg);
-let s = signer.genS(c);
+//Create X,A,c,s and msg
+X = signer.createCommitment();
+A = signer.A;
+let msg = 'Witaj Jedrzeju';
+
+let c = new mcl.Fr();
+c = signer.genC(msg);
+
+let s = new mcl.Fr();
+s = signer.genS(c);
 
 function encode(x){
     return x.getStr().slice(2);
@@ -35,19 +36,18 @@ let options = {
     uri: `${hostname}:${port}/${path}`,
     body: {
         payload: {
-            s: s.setStr(),
+            s: s.getStr(), //encode(s),
             A: encode(A),
             X: encode(X),
-            msg: msg.setStr()
+            msg: msg
         },
         protocol_name: 'sss'
     }, 
     json: true
 }
 
+console.log(options);
 rp(options).then(res =>{
     console.log(res)
 })
-// })
-
 })
