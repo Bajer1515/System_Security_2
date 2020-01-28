@@ -11,7 +11,7 @@ class Signer{
         this.A = mcl.mul(this.G1,this.a);
     }
 
-    setPrivateKey = function(privKey){
+    setPrivateKey(privKey){
         this.a = new mcl.Fr();
         this.a.setStr(privKey);
     }
@@ -25,20 +25,15 @@ class Signer{
         return this.X;
     }
 
-    genC(msg){
+    signMessage(msg){
         this.h = msg+this.X.getStr().slice(2);
         this.h1 = parseInt(sha3_512(this.h),10);
-        return this.h1;
-    }
 
-    genS(){
         this.c = new mcl.Fr();
-        // this.c = this.h1.getStr(10);
         this.c.setStr(this.h1+'');
         
-        // this.s = new mcl.Fr();
         this.s = mcl.add(this.x, mcl.mul(this.a,this.c));
-        return this.s;
+        return {sign: this.s.getStr(10), X: this.X.getStr(10).slice(2)};
     }
 
 }
