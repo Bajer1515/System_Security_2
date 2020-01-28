@@ -1,9 +1,10 @@
 const mcl = require('mcl-wasm');
 
+
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Prover = require('./Alice.js');
+const Alice = require('./Alice.js');
 const rp = require('request-promise');
 
 let Alice = new Alice();

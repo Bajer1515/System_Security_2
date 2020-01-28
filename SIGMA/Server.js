@@ -1,4 +1,3 @@
-// Import libraries or different files
 const mcl = require('mcl-wasm');
 const crypto = require('crypto');
 mcl.init(mcl.BLS12_381).then( ()=>
@@ -16,17 +15,16 @@ function decode(x){
 }
 
 app.get('/protocols/', (req, res) => {
-    res.json({schemas: ['sis']});
+    res.json({schemas: ['sigma']});
 });
 var port = 8080;
 
-app.post('/protocols/sis/init', (req, res) => {
+app.post('/protocols/sigma/init', (req, res) => {
     let X = new mcl.G1();
-    let A = new mcl.G1();
     let sessionToken = crypto.randomBytes(16).toString('base64');
     X.setStr(decode(req.body.payload.X)); 
     A.setStr(decode(req.body.payload.A));
-    verifier.consumeAX(A,X);
+    Bob.consumeAX(A,X);
     let c = verifier.createChallenge();
     let resp_body = {
         protocol_name: 'sis',
@@ -40,7 +38,7 @@ app.post('/protocols/sis/verify', (req, res) =>{
     console.log(req.body);
     let s = new mcl.Fr();
     s.setStr(req.body.payload.s);
-    let result = verifier.verify(s);
+    let result = Bob.verify(s);
     console.log("Verified:", result)
     if(result){
         res.statusCode = 200;
@@ -50,7 +48,6 @@ app.post('/protocols/sis/verify', (req, res) =>{
     }
     res.json({verified: result});
 
-    //s.setStr();
 })
 app.listen(port);
 })
