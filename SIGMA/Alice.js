@@ -23,11 +23,12 @@ class Alice{
         this.x.setByCSPRNG();
 
         this.X = mcl.mul(this.G1,this.x);
+        // return this.X;
     }
 
     genEph(){
         if(!this.X){
-            constructEph();
+            this.constructEph();
         }
         return this.X.getStr(10).slice(2);
     }

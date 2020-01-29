@@ -22,6 +22,7 @@ class Bob{
         this.y = new mcl.Fr();
         this.y.setByCSPRNG();
 
+        this.Y = new mcl.G1();
         this.Y = mcl.mul(this.G1,this.y);
     }
 
@@ -31,14 +32,14 @@ class Bob{
         }
         return this.Y.getStr(10).slice(2);
     }
-
+    
     async generateMAC(msg) {
-        this.g_xy = mcl.mul(this.Y,this.x);
-        this.mac_key = sha3_256("mac_"+this.g_xy.getStr(10));
+        this.g_xy = mcl.mul(this.X,this.y);
+        this.mac_key = Buffer.from(sha3_256("mac_"+this.g_xy.getStr(10)),'hex');
 
         // this.session_key = sha3_512("session_"+this.g_xy.getStr(10));
         let mac = new Poly1305(this.mac_key);
-        await mac.update(message);
+        await mac.update(msg);
         return await mac.finish();
     }
 
@@ -50,13 +51,13 @@ class Bob{
 
     init(payload){
         this.X = new mcl.G1();
-        this.X.setStr(payload.X);
+        this.X.setStr('1 '+payload.X);
 
         if(!this.Y) {
-            constructEph();
+            this.constructEph();
         }
-        this.mac = generateMac();        
-        this.sign = genSign();
+        this.mac = this.generateMAC(this.msg);        
+        this.sign = this.genSign();
 
         return {b_mac: this.mac, B: this.B, Y: genEph(), sign: this.sign}
     }

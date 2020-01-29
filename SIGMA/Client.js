@@ -17,8 +17,8 @@ let base_path = 'protocols/sigma';
 // function encode(x){
 //     return x.getStr().slice(2);
 // }
-X = alice.constructEph();
-
+X = alice.genEph();
+console.log(X)
 let path = base_path+'/init';
 let options = {
     method: 'POST',

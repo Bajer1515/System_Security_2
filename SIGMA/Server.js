@@ -28,7 +28,9 @@ app.post('/protocols/sigma/init', (req, res) => {
     // const payload = req.body.payload;
     // let X = new mcl.G1();
     // X.setStr(payload.X);
+    console.log(req.body.payload);
     BData = bob.init(req.body.payload);
+    
     let resp_body = {
         protocol_name: 'sigma',
         payload: {
