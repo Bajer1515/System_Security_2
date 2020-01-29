@@ -6,18 +6,19 @@ const app = express();
 const uuidv4 = require('uuid/v4');
 // const config = require('./config.js');
 
-const SIGMAProtocol = require('./Protocols.js');
+const Protocols = require('./Protocols.js');
 
 let aliceSIGMA,
     bobSIGMA = null;
 
-const HOST = '127.0.0.1';
+const HOST = '10.8.0.8';
+// const HOST = '127.0.0.1';
 // const HOST = '10.8.0.10';
 const PORT = 8080;
 
 // const HOST_A = '10.8.0.8'
-// const HOST_A = '10.8.0.10'
-const HOST_A = HOST;
+const HOST_A = '10.8.0.10'
+// const HOST_A = HOST;
 const BASE_URL = `http://${HOST_A}:${PORT}`;
 
 app.use(express.json())

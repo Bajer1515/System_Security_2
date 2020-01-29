@@ -17,6 +17,7 @@ class Alice {
         this.A = mcl.mul(this.G1,this.a);
 
         this.sss_signer = new sss.Signer();
+        this.sss_verify = new sss.Verifier();
         this.sss_signer.setPrivateKey(this.a.getStr(10));
     }
 
@@ -53,23 +54,31 @@ class Alice {
     }
 
     async loadPayload(payload) {
-        this.b_mac = payload.b_mac;
-        this.B = new mcl.G1()
-        this.B.setStr(`1 ${payload.B}`);
+        try {
+            this.b_mac = payload.b_mac;
+            this.B = new mcl.G1()
+            this.B.setStr(`1 ${payload.B}`);
 
-        this.Y = new mcl.G1(); 
-        this.Y.setStr(`1 ${payload.Y}`);
+            this.Y = new mcl.G1(); 
+            this.Y.setStr(`1 ${payload.Y}`);
 
-        const sig = payload.sig;
-        this.sig_X = new mcl.G1();
-        this.sig_X.setStr(`1 ${sig.X}`);
+            const sig = payload.sig;
+            this.sig_X = new mcl.G1();
+            this.sig_X.setStr(`1 ${sig.X}`);
 
-        this.sig_s = new mcl.Fr();
-        this.sig_s.setStr(sig.s);
+            this.sig_s = new mcl.Fr();
+            this.sig_s.setStr(sig.s);
 
-        this.msg = sig.msg
-        return this;
-    }
+            this.sig_msg = this.X.getStr(10).slice(2)+this.Y.getStr(10).slice(2);
+            this.sss_verify.verify(this.sig_msg,this.sig_s.getStr(10), this.sig_X.getStr(10).slice(2), this.B.getStr(10).slice(2));
+        
+            this.msg = sig.msg
+            return this;
+        } catch(err) {
+            console.log('Load payload error');
+            console.log(err);
+        }
+    }   
     
     generateSessionKey(g_xy) {
         const sessKey = sha3_256('session_'+g_xy.getStr(10));
@@ -122,7 +131,7 @@ class Alice {
 class Bob {
     constructor(config) {
         this.G1 = new mcl.G1();
-        this.G1.setStr(`1 ${config.g1}`);
+        this.G1.setStr('1 3685416753713387016781088315183077757961620795782546409894578378688607592378376318836054947676345821548104185464507 1339506544944476473020471379941921221584933875938349620426543736416511423956333506472724655353366534992391756441569');
 
         this.sss_signer = new sss.Signer(config);
 
