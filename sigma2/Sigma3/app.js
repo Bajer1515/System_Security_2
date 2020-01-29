@@ -31,9 +31,11 @@ app.post('/protocols/sigma/init', (req, res) => {
         // console.log(payload);
         const bobSessionToken = bobSIGMA.createSessionToken();
         bobSIGMA.init(payload).then( function(bobData) {
+            // console.log()
             res.status(200).send({session_token: bobSessionToken, payload: bobData});
+
         });
-        // res.status(200).send({value: 'after'});
+        res.status(200).send({value: 'after'});
     } catch (err) {
         console.log(err);
         res.status(403).send({valid: false, error: err});
@@ -67,7 +69,7 @@ const server = app.listen(PORT,HOST, () => {
         aliceSIGMA = new Protocols.Alice();
         bobSIGMA = new Protocols.Bob();
 
-        sigmaCall();
+        // sigmaCall();
     })
 });
 
