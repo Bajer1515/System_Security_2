@@ -11,14 +11,15 @@ const Protocols = require('./Protocols.js');
 let aliceSIGMA,
     bobSIGMA = null;
 
-const HOST = '10.8.0.8';
-// const HOST = '127.0.0.1';
+// const HOST = '10.8.0.8';
+const HOST = '127.0.0.1';
 // const HOST = '10.8.0.10';
 const PORT = 8080;
 
+// const HOST_A = '127.0.0.1';
 // const HOST_A = '10.8.0.8'
-const HOST_A = '10.8.0.10'
-// const HOST_A = HOST;
+// const HOST_A = '10.8.0.10'
+const HOST_A = HOST;
 const BASE_URL = `http://${HOST_A}:${PORT}`;
 
 app.use(express.json())
@@ -28,16 +29,14 @@ app.post('/protocols/sigma/init', (req, res) => {
         assert.equal(protocol_name,'sigma','Name of the protocol, must be `sigma`');
         const payload = req.body.payload;
         assert(payload,'Payload is required');
-        // console.log(payload);
+        console.log(payload);
         const bobSessionToken = bobSIGMA.createSessionToken();
         bobSIGMA.init(payload).then( function(bobData) {
-            // console.log()
             res.status(200).send({session_token: bobSessionToken, payload: bobData});
-
         });
-        res.status(200).send({value: 'after'});
+        // res.status(200).send({value: 'after'});
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(403).send({valid: false, error: err});
     }
 });
@@ -56,8 +55,9 @@ app.post('/protocols/sigma/exchange', (req,res) => {
 
         let msg = bobSIGMA.exchange(payload);
         res.status(200).send({msg: msg});
+        // console.log(res.data);
     } catch (err) {
-        // res.status(403).send({valid: false, error: err});
+        res.status(403).send({valid: false, error: err});
     }
 });
 
@@ -69,7 +69,7 @@ const server = app.listen(PORT,HOST, () => {
         aliceSIGMA = new Protocols.Alice();
         bobSIGMA = new Protocols.Bob();
 
-        // sigmaCall();
+        sigmaCall();
     })
 });
 
@@ -84,7 +84,7 @@ async function sigmaCall() {
     });
     try {
         const payload = res.data.payload;
-        // console.log(payload);
+        console.log(payload);
         const session_token = res.data.session_token;
         console.log(session_token);
         let exchangeData;
@@ -96,15 +96,15 @@ async function sigmaCall() {
                 payload: exchangeData
             }).then(function(res) {
                 aliceSIGMA.verifyCheckMsg(res.data.msg);
-                // console.log(res.data);
+                console.log(res.data);
             });
         });
         try {
-            // console.log(res.data);
+            console.log(res.data);
         } catch (err) {
             throw err;
         }
     } catch(err) {
-        // console.log(err);
+        console.log(err);
     }
 }

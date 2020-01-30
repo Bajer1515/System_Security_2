@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4');
 const sha3_256 = require('js-sha3').sha3_256;
 const sha3_512 = require('js-sha3').sha3_512;
 const assert = require('assert');
+const crypto = require('crypto');
 
 class Alice {
     constructor() {
@@ -43,8 +44,18 @@ class Alice {
 
     async generateMAC() {
         this.g_xy = mcl.mul(this.Y,this.x);
-        this.mac_key = Buffer.from(sha3_256("mac_"+this.g_xy.getStr(10)),'hex');
+        // this.mac_key = Buffer.from(sha3_256("mac_"+this.g_xy.getStr(10)),'hex');
+        
+        const mac_hash = crypto.createHash('SHA3-512');
+        mac_hash.update("mac_"+this.g_xy.getStr(10));
+        this.mac_key = mac_hash.digest().slice(0,32);
 
+        // // this.session_key = sha3_256("session_"+this.g_xy.getStr(10));
+        // let mac = new Poly1305(this.mac_key);
+        // let alicePublickeyBuffer = Buffer.from(this.A.getStr(10).slice(2));
+        // await mac.update(alicePublickeyBuffer);
+        // return await mac.finish();
+        // // return this.mac;
         // this.session_key = sha3_256("session_"+this.g_xy.getStr(10));
         let mac = new Poly1305(this.mac_key);
         let alicePublickeyBuffer = Buffer.from(this.A.getStr(10).slice(2));
@@ -81,12 +92,20 @@ class Alice {
     }   
     
     generateSessionKey(g_xy) {
-        const sessKey = sha3_256('session_'+g_xy.getStr(10));
+        // const sessKey = sha3_256('session_'+g_xy.getStr(10));
+        // return sessKey;
+        const ses_hash = crypto.createHash('SHA3-256');
+        ses_hash.update("session_"+g_xy.getStr(10));
+        const sessKey = ses_hash.digest();
         return sessKey;
     }
 
     createCheckMessage(session_key,msg) {
-        let c_msg = Buffer.from(sha3_512(session_key+msg)).toString('base64');
+        // let c_msg = Buffer.from(sha3_512(session_key+msg)).toString('base64');
+        // return c_msg;
+        let msg_hash = crypto.createHash('SHA3-512');
+        msg_hash.update(session_key+msg);
+        let c_msg = msg_hash.digest();
         return c_msg;
     }
 
@@ -117,11 +136,12 @@ class Alice {
             // console.log(sessKey);
             // console.log(this.msg);
             const myMsg = this.createCheckMessage(sessKey,this.msg);
-            // console.log(msg);
-            // console.log('myMsg:');
-            // console.log(myMsg);
-            assert.equal(myMsg,msg);
-            console.log('They are equal');
+            const msgBuff = Buffer.from(msg,'base64');
+            console.log(msgBuff);
+            console.log('myMsg:');
+            console.log(myMsg);
+            myMsg.equals(msgBuff);
+            console.log('{ Verification: True }');
         } catch(err) {
             throw err;
         }
@@ -129,11 +149,11 @@ class Alice {
 }
 
 class Bob {
-    constructor(config) {
+    constructor() {
         this.G1 = new mcl.G1();
         this.G1.setStr('1 3685416753713387016781088315183077757961620795782546409894578378688607592378376318836054947676345821548104185464507 1339506544944476473020471379941921221584933875938349620426543736416511423956333506472724655353366534992391756441569');
 
-        this.sss_signer = new sss.Signer(config);
+        this.sss_signer = new sss.Signer();
 
         this.b = new mcl.Fr();
         this.b.setByCSPRNG();
@@ -164,8 +184,11 @@ class Bob {
 
     async generateMAC() {
         this.g_xy = mcl.mul(this.X,this.y);
-        this.mac_key = Buffer.from(sha3_256("mac_"+this.g_xy.getStr(10)),'hex');
-        // console.log(this.mac_key);
+        const mac_hash = crypto.createHash('SHA3-256');
+        mac_hash.update("mac_"+this.g_xy.getStr(10));
+        this.mac_key = mac_hash.digest().slice(0,32);
+        // this.mac_key = Buffer.from(sha3_256("mac_"+this.g_xy.getStr(10)),'hex');
+        // // console.log(this.mac_key);
         let mac = new Poly1305(this.mac_key);
         let bobPublickeyBuffer = Buffer.from(this.B.getStr(10).slice(2));
         await mac.update(bobPublickeyBuffer);
@@ -174,6 +197,7 @@ class Bob {
     
     async genSig() {
         this.msg = this.X.getStr(10).slice(2)+this.Y.getStr(10).slice(2);
+        console.log('MSG: '+this.msg);
         const sig = await this.sss_signer.signMessage(this.msg);
         return sig;
     }
@@ -203,25 +227,45 @@ class Bob {
     }
 
     generateCheckHash(msg) {
-        // console.log('gen check hash start: '+msg);
-        this.session_key = sha3_256("session_"+this.g_xy.getStr(10));
-        // console.log("Session key BOB: "+this.session_key);
-        let c_msg = Buffer.from(sha3_512(this.session_key+msg)).toString('base64');
-        // console.log('gen check hash stop');
-        return c_msg;
+       // console.log('gen check hash start: '+msg);
+       const ses_hash = crypto.createHash('SHA3-256');
+       ses_hash.update("session_"+this.g_xy.getStr(10));
+       this.session_key = ses_hash.digest();
+       // console.log("Session key BOB: "+this.session_key);
+       const msg_hash = crypto.createHash('SHA3-512');
+       msg_hash.update(this.session_key+msg);
+
+       let c_msg = msg_hash.digest();
+       // console.log(c_msg);
+       return c_msg;
     }
 
     exchange(payload) {
-        // console.log(`Exchange start`);
-        this.a_mac = payload.a_mac;
-        // console.log(payload.A);
-        this.A = new mcl.G1();
-        this.A.setStr(`1 ${payload.A}`);
-        // console.log(this.A.getStr(10));
-        const sig = payload.sig;
-        this.msg = this.generateCheckHash(payload.msg);
-        // console.log(this.msg);
-        return this.msg;
+        try {
+            this.a_mac = payload.a_mac;
+            // console.log(payload.A);
+            this.A = new mcl.G1();
+            this.A.setStr(`1 ${payload.A}`);
+            // console.log(this.A.getStr(10));
+            const sig = payload.sig;
+            this.sig_X = new mcl.G1();
+            this.sig_X.setStr(`1 ${sig.X}`);
+
+            this.sig_s = new mcl.Fr();
+            this.sig_s.setStr(sig.s);
+
+            this.sig_msg = this.X.getStr(10).slice(2)+this.Y.getStr(10).slice(2);
+            this.sss_verify.verify(this.sig_msg,this.sig_s.getStr(10),this.sig_X.getStr(10).slice(2),this.A.getStr(10).slice(2));
+            
+            this.msg = this.generateCheckHash(payload.msg);
+            // console.log(this.msg);
+            return this.msg;
+
+        } catch (err) {
+            console.log('Bob exchange error: ');
+            console.log(err);
+            throw err;
+        }
     }
 }
 
