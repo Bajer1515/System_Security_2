@@ -96,15 +96,15 @@ async function sigmaCall() {
                 payload: exchangeData
             }).then(function(res) {
                 aliceSIGMA.verifyCheckMsg(res.data.msg);
-                console.log(res.data);
+                // console.log(res.data);
             });
         });
         try {
-            console.log(res.data);
+            // console.log(res.data);
         } catch (err) {
             throw err;
         }
     } catch(err) {
-        console.log(err);
+        // console.log(err);
     }
 }

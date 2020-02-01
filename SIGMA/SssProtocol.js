@@ -89,7 +89,7 @@ class Verifier {
             this.h = msg+this.X.getStr(10).slice(2);
             this.h1 = this.hash(this.h);
             
-            // this.c = new mcl.Fr();
+            this.c = new mcl.Fr();
             this.c.setStr(this.h1+'');
 
             this.s = new mcl.Fr();
